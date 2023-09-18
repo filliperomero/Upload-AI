@@ -1,13 +1,24 @@
-import { Github } from 'lucide-react'
+'use client'
+
+import { FileVideo, Github, Upload, Wand2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Slider } from '@/components/ui/slider'
 
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="flex items-center justify-between border-b px-6 py-3">
+      <div className="flex items-center justify-between border-b border-border px-6 py-3">
         <h1 className="text-xl font-bold">
           upload<span className="text-red-600">.ai</span>
         </h1>
@@ -46,7 +57,97 @@ export default function Home() {
           </p>
         </div>
 
-        <aside className="w-80"></aside>
+        <aside className="w-80 space-y-6">
+          <form className="space-y-6">
+            <label
+              htmlFor="video"
+              className="flex aspect-video cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-dashed border-border text-sm text-muted-foreground hover:bg-primary/5"
+            >
+              <FileVideo className="h-4 w-4" />
+              Select Video
+            </label>
+            <input
+              className="sr-only"
+              type="file"
+              id="video"
+              accept="video/mp4"
+            />
+
+            <Separator />
+
+            <div className="space-y-2">
+              <Label htmlFor="transcription_prompt">Transcription Prompt</Label>
+              <Textarea
+                id="transcription_prompt"
+                className="h-20 resize-none leading-relaxed"
+                placeholder="Add keywords mentioned in the video separated by comma (,)"
+              />
+            </div>
+
+            <Button type="submit" className="w-full">
+              Load Video <Upload className="ml-2 h-4 w-4" />
+            </Button>
+          </form>
+
+          <Separator />
+
+          <form className="space-y-6">
+            <div className="space-y-2">
+              <Label>Prompt</Label>
+              <Select>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a prompt..." />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectItem value="youtube_title">Youtube Title</SelectItem>
+                  <SelectItem value="youtube_description">
+                    Youtube Description
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <span className="block text-xs italic text-muted-foreground">
+                You can customize this option soon
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Model</Label>
+              <Select defaultValue="gpt3.5_turbo16k" disabled>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+
+                <SelectContent>
+                  <SelectItem value="gpt3.5_turbo16k">
+                    GPT 3.5-turbo 16k
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              <span className="block text-xs italic text-muted-foreground">
+                You can customize this option soon
+              </span>
+            </div>
+
+            <Separator />
+
+            <div className="space-y-4">
+              <Label>Temperature</Label>
+              <Slider min={0} max={1} step={0.1} />
+              <span className="block text-xs italic text-muted-foreground">
+                Higher values tend to make the result more creative and with
+                possible errors
+              </span>
+            </div>
+
+            <Separator />
+
+            <Button type="submit" className="w-full">
+              Execute
+              <Wand2 className="ml-2 h-4 w-4" />
+            </Button>
+          </form>
+        </aside>
       </main>
     </div>
   )
