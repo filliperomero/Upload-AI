@@ -38,3 +38,6 @@ next-env.d.ts
 # prisma
 dev.db
 *.db-journal
+
+# etc
+/tmp
