@@ -1,0 +1,39 @@
+@baseURL = http://localhost:3001/api
+
+# @name prompts
+GET {{baseURL}}/prompts
+
+###
+
+# @name upload
+POST {{baseURL}}/videos
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="example.mp3"
+Content-Type: audio/mpeg
+
+< ./example.mp3
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
+
+# @name create-transcriptions
+POST {{baseURL}}/transcriptions/ecf226cd-d611-4bf4-9e47-2d885002e83d
+Content-Type: application/json
+
+{
+  "prompt": "Clean archituecture, ddd"
+}
+
+###
+
+# @name generate-ai-completion
+POST {{baseURL}}/ai/generate/completion
+Content-Type: application/json
+
+{
+  "videoId": "ecf226cd-d611-4bf4-9e47-2d885002e83d",
+  "temperature": 0.5,
+  "prompt": "Generate a succinct summary of the video transcript given below: '''{transcription}'''"
+}

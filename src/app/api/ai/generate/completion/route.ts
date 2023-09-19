@@ -1,17 +1,18 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+import { StreamingTextResponse, OpenAIStream } from 'ai'
 
 import { prisma } from '@/lib/prisma'
 import { openai } from '@/lib/openai'
 
 const completionBodySchema = z.object({
   videoId: z.string().uuid(),
-  template: z.string(),
+  prompt: z.string(),
   temperature: z.number().min(0).max(1).default(0.5),
 })
 
 export async function POST(request: Request) {
-  const { videoId, template, temperature } = completionBodySchema.parse(
+  const { videoId, prompt, temperature } = completionBodySchema.parse(
     await request.json(),
   )
 
@@ -27,13 +28,16 @@ export async function POST(request: Request) {
       { status: 400 },
     )
 
-  const promptMessage = template.replace('{transcription}', video.transcription)
+  const promptMessage = prompt.replace('{transcription}', video.transcription)
 
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo-16k',
     temperature,
     messages: [{ role: 'user', content: promptMessage }],
+    stream: true,
   })
 
-  return NextResponse.json({ response })
+  const stream = OpenAIStream(response)
+
+  return new StreamingTextResponse(stream)
 }
