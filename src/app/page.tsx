@@ -31,7 +31,7 @@ export default function Home() {
     completion,
     isLoading,
   } = useCompletion({
-    api: 'http://localhost:3001/api/ai/generate/completion',
+    api: 'http://localhost:3002/api/ai/generate/completion',
     body: {
       videoId,
       temperature,
